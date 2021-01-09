@@ -65,7 +65,7 @@ Ordered a spare LCC (Lelit P/N 9600045). Did some research on the internet, and 
     * CN9: 2 pins, "SSR Riscaldamento Caldaia Caffe", Controls the SSR for the brew boiler
     * CN10: 6 pins, "Scheda Display Termopid OLED", Connects to the LCC. Presumably a 4 wire serial port plus VCC and GND?
   * Has 4 low voltage connectors on the bottom
-    * CN7: 2 pins, "[U]int.Erogazione", maybe the lever actuated switch on the front
+    * CN7: 2 pins, Lever actuated microswitch on the front to start the pump
     * CN5: 2 pins, "SSR Riscaldamento Caldaia Vapore", Controls the SSR for the service boiler
     * CN3: 2 pins, "Stemp.cald.vapore", probably the temperature probe for the service boiler
     * CN1: 2 pins, "Livello caldaia vapore", service boiler water level probe
