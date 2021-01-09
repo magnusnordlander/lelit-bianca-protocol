@@ -59,7 +59,7 @@ Ordered a spare LCC (Lelit P/N 9600045). Did some research on the internet, and 
     * FA8: Not labeled
     * FA10: Pump
   * Has 5 low voltage connectors on the top
-    * CN2: 2 pins, "Livello Serb.", unknown, Livello means level, so it could be a brew boiler level proble
+    * CN2: 2 pins, Water tank level probe
     * CN4: 2 pins, "Stemp.cald.caffé", probably the temperature probe for the brew boiler
     * CN6: 8 pins, Not labeled, not populated
     * CN9: 2 pins, "SSR Riscaldamento Caldaia Caffe", Controls the SSR for the brew boiler
