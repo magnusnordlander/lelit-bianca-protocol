@@ -38,6 +38,39 @@ Ordered a spare LCC (Lelit P/N 9600045). Did some research on the internet, and 
 * What is the pinout of the Black connector?
 * What is the purpose of the Red connector? Could that be a debug port?
 
+### 2021-01-12
+
+I got the LCC, and took high-res photos of it. 
+
+The outside is labeled as being 12VDC, and the circuit board labels the black port as RS232, which is consistent with 12VDC. The red port is labled OBP, which could be short for on-board programmer. The microcontroller is labeled as an Atmel ATMega644-20TU-TW, which is very peculiar since a Google search doesn't seem to turn up anything for that part number.
+
+* There is no MAX232 chip on the board. Those are *super* common in RS232 designs.
+* The pinout of the microcontroller seems consistent with other ATMega644s (pin numbers in standard TQFP44 counter clock-wise numbering from the notch; for the ports on the board, Red is numbered with 1 being close to silk screen 1, Black is numbered in the same manner)
+  * Pin 1 (PCINT13/ICP3/MOSI PB5) is connected to Red 3
+  * Pin 2 (PCINT14/OC3A/MISO PB6) is connected to Red 4
+  * Pin 3 (PCINT15/SCK PB7) is connected to Red 5
+  * Pin 4 (Reset) is connected to Red 2
+  * Looking at the trace width 5 and 6 should be VCC or GND (consistent)
+  * 7 and 8 is connected to an oscillator, which is consistent with them being XTAL2/XTAL1.
+  * Pin 9 (PCINT24/RXD0/T3* PD0) is connected to the collector of a A8A transistor, the base of which is connected to Black 3, and the emitter to ground
+  * Pin 10 (PCINT25/TXD0 PD1) is connected to a via routed to the base of an A8K transistor, the collector of which is Black 2, and the emitter to ground
+* Red pinout:
+  * Pin 1: Pin 6 on Black, probably VCC
+  * Red 2: Reset
+  * Red 3: PB5 (MOSI?)
+  * Red 4: PB6 (MISO?)
+  * Red 5: PB7 (SCK?)
+  * Pin 6: GND
+* Black pinout:
+  * Pin 1: Unknown
+  * Pin 2: TX?
+  * Pin 3: RX?
+  * Pin 4: GND
+  * Pin 5: Unknown, connected (among other things) to pin 5 on the display connector
+  * Pin 6: VCC?
+
+
+
 ## Reference materials
 
 ### Links
