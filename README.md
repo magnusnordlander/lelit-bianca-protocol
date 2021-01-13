@@ -42,6 +42,8 @@ Actually, before I do that, I'm also gonna build a small board with just some pi
 
 As for the OBP port, that probably uses standard Atmel ISP. I'm gonna get a programming harness and see if I can read the firmware from it, though it's not unlikely that reading it has been fused off.
 
+Addendum: The SSD1305 logic level is 3V3. The microcontroller is directly connected to signalling pins on the SSD1305. Clearly data going out from the microcontroller does so at 3V3 levels. That should mean the microcontroller is 3V3 powered... But that begs the question of what's up with Black 6.
+
 ### 2021-01-12
 
 I got the LCC, and took high-res photos of it. 
