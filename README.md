@@ -30,13 +30,17 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
-### 2021-01-09
+### 2021-01-13
 
-Ordered a spare LCC (Lelit P/N 9600045). Did some research on the internet, and started this log. I'm planning to open up the LCC, take high-res photos and try to determine the following:
+Display seems to be a MI12864GO 128x64 OLED with an SSD1305 driver run over either SPI or I2C. Pin 5 is Vdd. IC logic levels for SSD1305 is 3V3. Panel driving is 12V. Vcc is Pin 23, which is connected to Black pin 1.
 
-* Are there any COTS chips inside the LCC from which we might glean insights? 
-* What is the pinout of the Black connector?
-* What is the purpose of the Red connector? Could that be a debug port?
+I've updated the pinouts in yesterday's entry, which is not ideal, but it'll be fine.
+
+Some conclusions then: I'm gonna assume that the RS232 markings are correct, and that signalling is done using RS232 TX/RX pins. It's as of yet unclear what levels the signaling is at. If my guesses as to voltages are correct, I'm guessing it's using 12V signalling, otherwise the transistors would be unnecessary. I guess it's time to disassemble the Bianca and measure the RX/TX voltages on a live system? `¯\_(ツ)_/¯`
+
+Actually, before I do that, I'm also gonna build a small board with just some pins to go inbetween the control box and the LCC, just so that I can assemble the Bianca again and still have access to the signalling pins.
+
+As for the OBP port, that probably uses standard Atmel ISP. I'm gonna get a programming harness and see if I can read the firmware from it, though it's not unlikely that reading it has been fused off.
 
 ### 2021-01-12
 
@@ -56,20 +60,26 @@ The outside is labeled as being 12VDC, and the circuit board labels the black po
   * Pin 10 (PCINT25/TXD0 PD1) is connected to a via routed to the base of an A8K transistor, the collector of which is Black 2, and the emitter to ground
 * Red pinout:
   * Pin 1: Pin 6 on Black, probably VCC
-  * Red 2: Reset
+  * Red 2: Reset (pulled high)
   * Red 3: PB5 (MOSI?)
   * Red 4: PB6 (MISO?)
   * Red 5: PB7 (SCK?)
   * Pin 6: GND
 * Black pinout:
-  * Pin 1: Unknown
+  * Pin 1: 12V presumably
   * Pin 2: TX?
   * Pin 3: RX?
   * Pin 4: GND
-  * Pin 5: Unknown, connected (among other things) to pin 5 on the display connector
-  * Pin 6: VCC?
+  * Pin 5: 3V3 very likely
+  * Pin 6: 5V presumably
 
+### 2021-01-09
 
+Ordered a spare LCC (Lelit P/N 9600045). Did some research on the internet, and started this log. I'm planning to open up the LCC, take high-res photos and try to determine the following:
+
+* Are there any COTS chips inside the LCC from which we might glean insights? 
+* What is the pinout of the Black connector?
+* What is the purpose of the Red connector? Could that be a debug port?
 
 ## Reference materials
 
