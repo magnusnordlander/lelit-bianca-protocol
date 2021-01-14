@@ -44,6 +44,10 @@ As for the OBP port, that probably uses standard Atmel ISP. I'm gonna get a prog
 
 Addendum: The SSD1305 logic level is 3V3. The microcontroller is directly connected to signalling pins on the SSD1305. Clearly data going out from the microcontroller does so at 3V3 levels. That should mean the microcontroller is 3V3 powered... But that begs the question of what's up with Black 6.
 
+### 2021-01-13
+
+I remembered my Bus Pirate can program AVRs, and decided to hook it up to the OBP port. Sadly (but very much expectedly), lock bits are set such that the flash cannot be easily read.
+
 ### 2021-01-12
 
 I got the LCC, and took high-res photos of it. 
