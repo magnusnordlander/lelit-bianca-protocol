@@ -26,7 +26,11 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 ## Open questions
 
 * Is the LCC communicating with the Control board using a serial protocol? If so, what is it?
+
+## Answered questions
+
 * Is the Red port on the LCC a debug port?
+  * Not exactly. It's an on-board programming port.
 
 ## Project log
 
