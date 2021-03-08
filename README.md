@@ -34,6 +34,20 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-03-08
+
+I added a vampire board to the connection betweeh the LCC and the Control Board. I was able to measure the voltages.
+
+* Black pinout:
+  * Pin 1: 12V (Measured 12.6V)
+  * Pin 2: TX?
+  * Pin 3: RX?
+  * Pin 4: GND
+  * Pin 5: 3V3 (Measured 3.1V)
+  * Pin 6: 3V3 (Measured 3.1V)
+
+I'm kind of surprised that pin 6 is also 3V3. Tomorrow I'm getting an oscilloscope, but it does seem very likely that the RX/TX pins are actual RS232. Will confirm using the scope. If so, I do have a couple of MAX232s, so I'll be able to build a simple logger from an Arduino and an SD card.
+
 ### 2021-01-13
 
 Display seems to be a MI12864GO 128x64 OLED with an SSD1305 driver run over either SPI or I2C. Pin 5 is Vdd. IC logic levels for SSD1305 is 3V3. Panel driving is 12V. Vcc is Pin 23, which is connected to Black pin 1.
