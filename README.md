@@ -34,6 +34,35 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 * Is the LCC communicating with the Control board using a serial protocol?
   * Yes, and it contains interesting information.
 
+## Random thoughts on the protocol
+
+Dumping the data I've identified 6 analog signals that makes sense to find out what they do. Byte references are to the COLI protocol, captured at 8N1, despite probably being wrong.
+
+* Signal Alpha
+  * Main byte is Byte 2.
+  * Smooths well with the current algorithm
+  * Didn't vary a lot in run 1
+* Signal Beta 
+  * Main byte is Byte 5.
+  * Smooths well with the current algorithm
+  * Didn't vary a lot in run 1
+* Signal Gamma
+  * Main byte is Byte 8
+  * Smooths well with the current algorithm
+  * Varies a lot, probably a temperature
+* Signal Delta
+  * Only identified byte is byte 16
+  * Doesn't smooth
+  * Varies a lot
+* Signal Epsilon
+  * Main byte is Byte 11
+  * Smooths well
+* Signal Zeta
+  * Main byte is Byte 14
+  * Smooths well
+  * Barely varies at all. Possibly it's the tank level probe? My machine is plumbed, so that'd make sense.
+
+
 ## Project log
 
 ### 2021-03-09
