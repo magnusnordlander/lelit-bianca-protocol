@@ -25,14 +25,37 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Open questions
 
-* Is the LCC communicating with the Control board using a serial protocol? If so, what is it?
+* How does the serial protocol work?
 
 ## Answered questions
 
 * Is the Red port on the LCC a debug port?
   * Not exactly. It's an on-board programming port.
+* Is the LCC communicating with the Control board using a serial protocol?
+  * Yes, and it contains interesting information.
 
 ## Project log
+
+### 2021-03-09
+
+I got plenty of work done on this project today. I got my oscilloscope, and measured the RX/TX lines. They are *not* RS232, but rather a 5V UART running at 9600 baud. I hooked up an Arduino to it to grab protocol data.
+
+I had to guess at stop bits and parity, and the current capture is with 8N1, though either that's completely wrong, or the protocol pads with a lot of unnecessary data. I am able to get *some* data that makes *some* sense though. The data is committed to this repository. The raw capture is `dump/log.txt`. Most of the work at making sense of it is being done in the Excel file.
+
+Thus far I've mostly looked at the communications from the control board to the LCC (labeled RX in the dump, though I'll probaby change that to COLI, for Control board Out, LCC in, and CILO for Control board In, LCC Out).
+
+Some conclusions I'm already prepared to draw about the architecture of the Bianca:
+
+* The control board is basically just a bridge to the machines sensors and actuators. All the logic is in the LCC.
+* There appears to be at least 4 distinct analog sensors (think thermocouples etc.) interfaced to the LCC.
+* I've identified a binary flag that appears to be whether the handle has been pulled.
+* The LCC appears to have control over the two heating elements (on/off).
+  * The LCC thus is the PID controller.
+  * The stock LCC doesn't run the two elements separately, though it seems possible from a protocol standpoint. I'm not gonna try it though.
+* I would assume it also has control over the pump, though I need some more experimentation to determine how.
+* It should definitely be possible to sniff data from the protocol.
+* It's very likely possible to develop a smarter LCC replacement using something like an Arduino.
+
 
 ### 2021-03-08
 
