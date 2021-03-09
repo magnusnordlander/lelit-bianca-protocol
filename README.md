@@ -38,7 +38,7 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 I added a vampire board to the connection betweeh the LCC and the Control Board. I was able to measure the voltages.
 
-* Black pinout:
+* Black pinout (red wire is pin 6):
   * Pin 1: 12V (Measured 12.6V)
   * Pin 2: TX?
   * Pin 3: RX?
