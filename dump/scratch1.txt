@@ -1,0 +1,61 @@
+                       0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17
+
+Frame000 RX 62962244:  3F FF 1F FF FF 49 FF FF 1  1  FF 9F 1 FF 3F FF 4D 0
+Frame000 RX 63052232:  3F FF 1D FF FF 49 FF FD FF FF FF 9F 1 FF 3F FF 45 0
+
+Frame000 RX 110788644: 3F FF E5  1 FF 33 FF FD  1 FF FF 55  1 FF 3F FF B1 0
+Frame000 RX 110868716: 3F FF E5  1 FF 33 FF FD  1 FF FF 55  1 FF 3D FF AF 0
+Frame000 RX 110958816: 3F FF E5  1 FF 33 FF FD FF  1 FF 55  1 FF 3D FF AF 0
+Frame000 RX 111038688: 3F FF E5  1 FF 33 FF FD FF  1 FF 53  1 FF 3F FF AF 0
+Frame000 RX 111128792: 3F FF E5  1 FF 33 FF FD FF  1 FF 53  1 FF 3F FF AF 0
+Frame000 RX 111218892: 3F FF E5  1 FF 33 FF FD FF  1 FF 55  1 FF 3F FF B1 0
+Frame000 RX 111298864: 3F FF E5  1 FF 33 FF FD FF  1 FF 53  1 FF 3F FF AF 0
+
+
+
+Frame000 RX 421200648: 3F FD DD FF FF B5  1 F9 41 FF FD 11  1 FF 35 FF 15 0
+
+
+
+F9 41 FF    1111 1001 0100 0001 1111 1111      =>     0000 0010 0000
+
+
+
+7  8  9 
+FD  1 FF    1111 1101 0000 0001 1111 1111      =>     0010 0000 0000
+FD FF  1    1111 1101 1111 1111 0000 0001      =>     0001 1111 1111
+
+1 num5 = 0x00, num4 = 0x100, e = true, ex = +128, v = 384, ö = 512
+2 num5 = 0x7F, num4 = 0x100, e = false, ex = +128, v = 511
+
+
+7  8  9 
+FF  1  1    1111 1111 0000 0001 0000 0001      =>     0010 1000 0000
+FD FF FF    1111 1101 1111 1111 1111 1111      =>     0010 0111 1111
+
+1 num5 = 0x00, num4 = 0x180, e = false, ex = +128, v = 512
+2 num5 = 0x7F, num4 = 0x100, e = true, ex = +256, v = 639
+
+
+    $num5h = hexdec($hex2); // 
+    $num5 = $num5h >> 1;
+
+    $num4h = hexdec($hex1);
+    $num4 = $num4h & 0x06;
+    $num4 = $num4 << 6;
+
+    $ex = 0;
+
+    if ($extra) {
+        $e = hexdec($extra);
+
+        if ((($e & 0x2) && ($num4h & 0x2)) || ($num4h & 0x4)) {
+            $ex = 0x80;
+        }
+
+        if (($e & 0x2) && ($num4h & 0x4))) {
+            $ex = 0x100;
+        }
+    }
+
+    return ($num4 | $num5) + $ex;

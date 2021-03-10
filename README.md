@@ -42,21 +42,27 @@ Dumping the data I've identified 6 analog signals that makes sense to find out w
   * Main byte is Byte 2.
   * Smooths well with the current algorithm
   * Didn't vary a lot in run 1
+  * Highly correlated with Delta and Gamma
 * Signal Beta 
   * Main byte is Byte 5.
   * Smooths well with the current algorithm
   * Didn't vary a lot in run 1
+  * Highly correlated with Epsilon
 * Signal Gamma
   * Main byte is Byte 8
   * Smooths well with the current algorithm
   * Varies a lot, probably a temperature
+  * Probably brew boiler temperature, 173 seems to be ~93°C
+  * Highly correlated with Delta and Alpha, but not the same
 * Signal Delta
   * Only identified byte is byte 16
   * Doesn't smooth
   * Varies a lot
+  * Highly correlated with Gamma and Alpha, but not the same
 * Signal Epsilon
   * Main byte is Byte 11
   * Smooths well
+  * Probably steam boiler temperature, 63 seems to be ~125°C, 88 seems to be 119°C
 * Signal Zeta
   * Main byte is Byte 14
   * Smooths well

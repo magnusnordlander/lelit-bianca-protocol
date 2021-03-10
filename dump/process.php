@@ -17,15 +17,10 @@ function doStuff(string $hex1, string $hex2, ?string $extra = null): int {
 
         if ((($e & 0x2) && ($num4h & 0x2)) || ($num4h & 0x4)) {
             $ex = 0x80;
+        }
 
-/*            if ($e & 0x2) {
-                            echo sprintf("Debug: %s %s %s %s %s\n", base_convert($num4, 10, 2), base_convert($num5, 10, 2), base_convert($ex, 10, 2), base_convert(($num4 | $num5), 10, 2), base_convert(($num4 | $num5) + $ex, 10, 2));
-
-            echo sprintf("%s %s %s", base_convert($num4h, 10, 2), base_convert($num5h, 10, 2), base_convert($e, 10, 2));
-
-            die();
-            } */
-
+        if (($e & 0x2) && ($num4h & 0x4)) {
+            $ex = 0x100;
         }
     }
 
