@@ -58,8 +58,8 @@ void loop() {
   // loop_ascii_alt() - only one byte written per line. Least effecient method.
   // loop_binary() - most effecient method but will require a program on the sniffing computer to decode
   //
-  //loop_ascii();
-  loop_ascii_alt();
+  loop_ascii();
+  //loop_ascii_alt();
   //loop_binary();
 }
 

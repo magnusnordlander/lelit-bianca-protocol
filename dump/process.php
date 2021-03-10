@@ -1,6 +1,6 @@
 <?php
 
-$data = file_get_contents("log.txt");
+$data = file_get_contents($argv[1]);
 
 function doStuff(string $hex1, string $hex2, ?string $extra = null): int {
     $num5h = hexdec($hex2);
