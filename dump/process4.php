@@ -14,7 +14,7 @@ function doStuff(string $hextriplet): int {
     return $lsb | ($msb << 7);
 }
 
-echo "time,b2,b5,b8,b11,b14\n";
+echo "time,unkn1,unkn2,brewboiler,serviceboiler,waterlevel,microswitch\n";
 
 foreach (explode("\n", $data) as $line) {
     $parts = explode(" ", $line);
@@ -34,7 +34,9 @@ foreach (explode("\n", $data) as $line) {
         // RX, from control board
         [$frame, $dir, $time, $byte0, $byte1, $byte2, $byte3, $byte4, $byte5, $byte6, $byte7, $byte8, $byte9, $byte10, $byte11, $byte12, $byte13, $byte14, $byte15, $byte16, $nul] = $parts;
 
-        echo sprintf("%s,%d,%d,%d,%d,%d\n", rtrim($time, ":"), doStuff($byte1.$byte2.$byte3), doStuff($byte4.$byte5.$byte6), doStuff($byte7.$byte8.$byte9), doStuff($byte10.$byte11.$byte12), doStuff($byte13.$byte14.$byte15));
+        $microswitchOn = (hexdec($byte1) & 0x40) === 0x00;
+
+        echo sprintf("%s,%d,%d,%d,%d,%d,%d\n", rtrim($time, ":"), doStuff($byte1.$byte2.$byte3), doStuff($byte4.$byte5.$byte6), doStuff($byte7.$byte8.$byte9), doStuff($byte10.$byte11.$byte12), doStuff($byte13.$byte14.$byte15), $microswitchOn ? 255 : 0);
 
         ///echo sprintf("%s %d %d %d %d\n", $time, hexdec($byte7) >> 1, hexdec($byte8) >> 1, hexdec($byte9) >> 1, doStuff($byte7, $byte8));
     }

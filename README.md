@@ -25,7 +25,8 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Open questions
 
-* How does the serial protocol work?
+* What's with the weird encodings?
+* What's in the other bits on the CILO protocol?
 
 ## Answered questions
 
@@ -36,40 +37,29 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Random thoughts on the protocol
 
-Dumping the data I've identified 6 analog signals that makes sense to find out what they do. Byte references are to the COLI protocol, captured at 8N1, despite probably being wrong.
+Dumping the data I've identified 6 analog signals that makes sense to find out what they do. Byte references are
 
-* Signal Alpha
-  * Main byte is Byte 2.
-  * Smooths well with the current algorithm
-  * Didn't vary a lot in run 1
-  * Highly correlated with Delta and Gamma
-* Signal Beta 
-  * Main byte is Byte 5.
-  * Smooths well with the current algorithm
-  * Didn't vary a lot in run 1
-  * Highly correlated with Epsilon
-* Signal Gamma
-  * Main byte is Byte 8
-  * Smooths well with the current algorithm
-  * Varies a lot, probably a temperature
-  * Probably brew boiler temperature, 173 seems to be ~93°C
-  * Highly correlated with Delta and Alpha, but not the same
-* Signal Delta
-  * Only identified byte is byte 16
-  * Doesn't smooth
-  * Varies a lot
-  * Highly correlated with Gamma and Alpha, but not the same
-* Signal Epsilon
-  * Main byte is Byte 11
-  * Smooths well
-  * Probably steam boiler temperature, 63 seems to be ~125°C, 88 seems to be 119°C
-* Signal Zeta
-  * Main byte is Byte 14
-  * Smooths well
-  * Barely varies at all. Possibly it's the tank level probe? My machine is plumbed, so that'd make sense.
-
+* COLI
+  * Each packet starts with 0x3F (byte 0), and ends with 0x00 (byte 17). Including the terminating NUL, each packet is 18 bytes long.
+  * Most values are some weird 3 byte thing (which I call a triplet), with a weird encoding. See transformHextriplet in sniffer.ino. The maximum length in the current implementation is 12 bits, so that could well be the actual max length.
+  * Microswitch: Bitmask 0x40 of byte 1. On if 0.
+  * Brew boiler temp: Triplet of bytes 7-9. Lower value means higher temperature. See temp-calibration.txt for some calibration values (in celsius).
+  * Service boiler temp: Triplet of bytes 10-12. Lower value means higher temperature. See temp-calibration.txt for some calibration values (in celsius).
+  * Probably water level in the tank: Triplet of bytes 13-15
+    * My machine is plumbed, so I need to actually connect the tank to check this. I haven't yet done that.
+  * There are two other possible triplets, on 1-3 and 4-6. You *do* get values on those, but they're eerily similar to brew/service boiler temp.
+* CILO
+  * Each packet ends with a terminating NUL (byte 4), and is 5 bytes long, NUL included.
+  * Brew boiler heating element: Bitmask 0x0E of byte 0. On if value equals 0x0A.
+  * Service boiler heating element: Bitmask 0xF0 of byte 1. On if value equals 0xE0.
+  * Pump: Bitmask 0x0E of byte 1. On if value equals 0x0E.
+  * There are additional flags here that vary, that will need to be figured out for stage 2.
 
 ## Project log
+
+### 2021-03-10
+
+Major progress today. I logged more raw sessions, did a lot of head scratching, and I now have an Arduino program able to read all the information available and interesting. There are still some open questions, like "What's with the weird encoding". Next step is to build a simple datalogger so I don't have to have the computer running to capture logs. I'm also gonna be attaching a display, for funsies.
 
 ### 2021-03-09
 
