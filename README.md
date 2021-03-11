@@ -5,24 +5,6 @@ Project notes for trying to sniff and reverse engineer the protocols used for LC
 * Stage 1: Expose interesting information as an IoT appliance
 * Stage 2: Allow for IoT control of set points, sleep mode etc
 
-## Background
-
-The Lelit Bianca displays interesting information on the display of the LCC. I want to be able to integrate my Lelit Bianca into my Smart Home. Considering that the Lelit Bianca is able to add functionality by upgrading just the LCC module (which carries a versioned firmware), it stands to reason that it is more than just a mere display and buttons for the Control board. The two are connected via a 6 wire connection. The LCC is able to display the following definitely external information:
-
-* Brew boiler temperature
-* Service boiler temperature
-* Pump status
-
-It's also either able to set or itself controls the following:
-
-* Brew boiler set point
-* Service boiler set point
-* Pre-infusion parameters
-
-Carring this amount of information in a parallel bus together with a bus to drive an OLED display would require far more wires than 6. It therefore stands to reason that the LCC must be communicating with the Control Board via a serial bus. That serial bus must at the very least *contain* interesting status information (temperatures e.g.).
-
-Furthermore, there is an unpopulated port on the LCC. This could possibly be a debug port. Depending on what gets stored where, a debug port might be necessary for stage 2.
-
 ## Open questions
 
 * What's with the weird encodings?
@@ -40,14 +22,15 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 Dumping the data I've identified 6 analog signals that makes sense to find out what they do. Byte references are
 
 * COLI
-  * Each packet starts with 0x3F (byte 0), and ends with 0x00 (byte 17). Including the terminating NUL, each packet is 18 bytes long.
+  * Each packet ends with 0x00 (byte 17). Including the terminating NUL, each packet is 18 bytes long.
   * Most values are some weird 3 byte thing (which I call a triplet), with a weird encoding. See transformHextriplet in sniffer.ino. The maximum length in the current implementation is 12 bits, so that could well be the actual max length.
   * Microswitch: Bitmask 0x40 of byte 1. On if 0.
   * Brew boiler temp: Triplet of bytes 7-9. Lower value means higher temperature. See temp-calibration.txt for some calibration values (in celsius).
   * Service boiler temp: Triplet of bytes 10-12. Lower value means higher temperature. See temp-calibration.txt for some calibration values (in celsius).
-  * Probably water level in the tank: Triplet of bytes 13-15
-    * My machine is plumbed, so I need to actually connect the tank to check this. I haven't yet done that.
+  * Water level in the service boiler (not 100% sure, but somewhat): Triplet of bytes 13-15
+    * This would heavily imply that the LCC is responsible for runnning the pump to fill the service boiler.
   * There are two other possible triplets, on 1-3 and 4-6. You *do* get values on those, but they're eerily similar to brew/service boiler temp.
+  * Considering the manual (pg. 29, Alarms showed on display), the LCC should also have an opinion on water tank level (My machine is plumbed, but at some point I'm gonna plug in a tank and see what's what)
 * CILO
   * Each packet ends with a terminating NUL (byte 4), and is 5 bytes long, NUL included.
   * Brew boiler heating element: Bitmask 0x0E of byte 0. On if value equals 0x0A.
@@ -55,7 +38,40 @@ Dumping the data I've identified 6 analog signals that makes sense to find out w
   * Pump: Bitmask 0x0E of byte 1. On if value equals 0x0E.
   * There are additional flags here that vary, that will need to be figured out for stage 2.
 
+## Background (Written at the start of the project)
+
+The Lelit Bianca displays interesting information on the display of the LCC. I want to be able to integrate my Lelit Bianca into my Smart Home. Considering that the Lelit Bianca is able to add functionality by upgrading just the LCC module (which carries a versioned firmware), it stands to reason that it is more than just a mere display and buttons for the Control board. The two are connected via a 6 wire connection. The LCC is able to display the following definitely external information:
+
+* Brew boiler temperature
+* Service boiler temperature
+* Pump status
+
+It's also either able to set or itself controls the following:
+
+* Brew boiler set point
+* Service boiler set point
+* Pre-infusion parameters
+
+Carring this amount of information in a parallel bus together with a bus to drive an OLED display would require far more wires than 6. It therefore stands to reason that the LCC must be communicating with the Control Board via a serial bus. That serial bus must at the very least *contain* interesting status information (temperatures e.g.).
+
+Furthermore, there is an unpopulated port on the LCC. This could possibly be a debug port. Depending on what gets stored where, a debug port might be necessary for stage 2.
+
 ## Project log
+
+### 2021-03-11
+
+Some progress. I wrote a standalone sniffer that reads data off the bus, dumps it to an SD card, and shows the processed data on a display. Since the bus provides 12V, I'm able to drive the whole shebang off of it. 
+
+I also discovered that my assumption about COLI packets always starting with 3F was wrong. They do not.
+
+Some longer-term game plan elements:
+
+* Try to use an Arduino Nano 33 IoT instead of a Arduino Mega 2560 (needs level shifting, but has integrated WiFi). This requires using SoftSerial instead of hardware serial.
+* Using wifi, integrate the data into my smart home via MQTT.
+* Try using the Arduino as a bus transceiver instead of a sniffer (this will require better cabling).
+* Make a nicer enclosure.
+
+The ultimate goal is to understand fully the protocol, and then create a replacement LCC board.
 
 ### 2021-03-10
 

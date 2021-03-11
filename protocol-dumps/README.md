@@ -29,3 +29,15 @@ The machine is at heat and does nothing
 ## Log4.txt
 
 One extraction
+
+## LOG14.TXT
+
+Slightly different format (SD card dump). This is just part of a cold start up.
+
+## LOG15.TXT
+
+A warm start, running the pump a little, and then ending with turning on eco mode, and later sleep mode. This caused the logger's parsing to go bonkers, so I reset it, creating LOG16.TXT
+
+## LOG16.TXT
+
+See LOG15.TXT
