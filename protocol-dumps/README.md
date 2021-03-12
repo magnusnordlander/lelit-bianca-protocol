@@ -41,3 +41,7 @@ A warm start, running the pump a little, and then ending with turning on eco mod
 ## LOG16.TXT
 
 See LOG15.TXT
+
+## LOG0.TXT
+
+A pretty short log, this is a small part of a hot start, but mostly, I let out some service boiler water; enough to cause a fill.

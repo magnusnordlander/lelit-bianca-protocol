@@ -39,21 +39,15 @@ uint16_t transformHextripet(uint8_t byte0, uint8_t byte1, uint8_t byte2) {
 }
 
 float transformBrewTemp(int brewnumber) {
-    // 747 = 18 deg C
-    // 164 = 95 deg C
-
-    float k = ((95. - 18.) / (747. - 164.))*-1.;
-    float m = ((k * 747.) - 18.)*-1.;
+    float k = -0.1342;
+    float m = 119.71;
 
     return k*((float)brewnumber)+m;
 }
 
 float transformServiceTemp(int servicenumber) {
-    // 684 = 37 deg C
-    // 63 = 125 deg C
-
-    float k = ((125. - 37.) / (684. - 63.))*-1.;
-    float m = ((k * 684.) - 37.)*-1;
+    float k = -0.1402;
+    float m = 131.65;
 
     return k*((float)servicenumber)+m;
 }
@@ -99,8 +93,18 @@ void setup() {
 
 void readData() {
   int n;
+
+  memset(coliBuf, 0, sizeof(coliBuf));
+  memset(ciloBuf, 0, sizeof(ciloBuf));
   
   if (Serial1.available() > 0) {
+    if (Serial1.available() > 36) {
+      // Discard things from the UART buffer until it's less full
+      Serial1.readBytesUntil(0x00, coliBuf, 18);
+      Serial1.readBytesUntil(0x00, coliBuf, 18);
+      memset(coliBuf, 0, sizeof(coliBuf));
+    }
+    
     // COLI
     n = Serial1.readBytesUntil(0x00, coliBuf, 18);
   
@@ -113,23 +117,30 @@ void readData() {
       coliError = "";
     } else {
       String lenString = String(n);
-      coliError = String("COLI: exp 18B, rcv " + lenString);
+      coliError = String("COLI: exp 17B, rcv " + lenString);
     }
   }
 
   if (Serial2.available() > 0) {
+    if (Serial1.available() > 10) {
+      // Discard things from the UART buffer until it's less full
+      Serial2.readBytesUntil(0x00, ciloBuf, 5);
+      Serial2.readBytesUntil(0x00, ciloBuf, 5);
+      memset(ciloBuf, 0, sizeof(ciloBuf));
+    }
+    
     // CILO
     n = Serial2.readBytesUntil(0x00, ciloBuf, 5);
   
     if(n == 4) {
-      brewboilerhe = (ciloBuf[0] & 0x0E) == 0x0A;
-      serviceboilerhe = (ciloBuf[1] & 0xF0) == 0xE0;
+      serviceboilerhe = (ciloBuf[0] & 0x0E) == 0x0A;
+      brewboilerhe = (ciloBuf[1] & 0xF0) == 0xE0;
       pumpOn = (ciloBuf[1] & 0x0E) == 0x0E;
 
       ciloError = "";
     } else {
       String lenString = String(n);
-      ciloError = String("CILO: exp 5B, rcv " + lenString);
+      ciloError = String("CILO: exp 4B, rcv " + lenString);
     }  
   }
 }
