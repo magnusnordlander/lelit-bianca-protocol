@@ -58,6 +58,13 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-03-12
+
+I discovered that the signalling level on the CILO bus is actually 3V3. This explains the transistor setup on the LCC! I'm not sure if the MCU on the LCC is 5V tolerant, but I would guess it isn't and that they're using the transistor to make sure that the COLI bus is shifted to 3V3. I'd further venture that they considered the maximum output (amperage-wise) of the digital pins on the MCU insufficient for the bus, so they are using that as a gate to one of the 3V3 pins on the bus. Weird but kind of clever.
+
+I also tried porting the standalone logger to an Arduino Nano 33 IoT, but I'm having some trouble with the UARTs. I will be getting to the bottom of that though, since it's A) interesting, and B) could shed more light on the protocol.
+
+
 ### 2021-03-11
 
 Some progress. I wrote a standalone sniffer that reads data off the bus, dumps it to an SD card, and shows the processed data on a display. Since the bus provides 12V, I'm able to drive the whole shebang off of it. 
