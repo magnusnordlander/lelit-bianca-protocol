@@ -111,8 +111,8 @@ I added a vampire board to the connection betweeh the LCC and the Control Board.
 
 * Black pinout (red wire is pin 6):
   * Pin 1: 12V (Measured 12.6V)
-  * Pin 2: TX?
-  * Pin 3: RX?
+  * Pin 2: TX (to Control board, 3V3)
+  * Pin 3: RX (from Control board, 5V)
   * Pin 4: GND
   * Pin 5: 3V3 (Measured 3.1V)
   * Pin 6: 3V3 (Measured 3.1V)
