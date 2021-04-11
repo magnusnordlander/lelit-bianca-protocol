@@ -3,7 +3,7 @@ Project notes for trying to sniff and reverse engineer the protocols used for LC
 
 ## Goals
 * Stage 1: Expose interesting information as an IoT appliance
-* Stage 2: Allow for IoT control of set points, sleep mode etc
+* ~~Stage 2: Allow for IoT control of set points, sleep mode etc~~ (Not possible without replacing LCC)
 
 ## Open questions
 
