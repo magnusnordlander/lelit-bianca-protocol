@@ -1,6 +1,9 @@
 # lelit-bianca-protocol
 Project notes for trying to sniff and reverse engineer the protocols used for LCC information on the Lelit Bianca
 
+# Important project note 2021-06-04
+So, I just discovered that the Bianca uses inverted UART signalling. Most protocol weirdness seems to be related to that. Quite a bit of information created before (including protocol dumps) 2021-06-04 is somewhat wrong because of this. I will be purging incorrect information at some point, but at the moment, YMMV
+
 ## Goals
 * Stage 1: Expose interesting information as an IoT appliance
 * ~~Stage 2: Allow for IoT control of set points, sleep mode etc~~ (Not possible without replacing LCC)
