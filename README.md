@@ -58,6 +58,9 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-06-03
+I've purchased a spare control board. The line-voltage and logic-level parts are mostly separate boards, and I've separated them to be able to rig up a bench setup (tested and works). The MCU is a STM8S003F3. Datasheet at https://www.st.com/resource/en/datasheet/stm8s003f3.pdf. It also uses two STPIC6C595 to control logic-level outputs, and it seems the thermocouples (I bought two of those too) are resistance based.
+
 ### 2021-03-12
 
 I discovered that the signalling level on the CILO bus is actually 3V3. This explains the transistor setup on the LCC! I'm not sure if the MCU on the LCC is 5V tolerant, but I would guess it isn't and that they're using the transistor to make sure that the COLI bus is shifted to 3V3. I'd further venture that they considered the maximum output (amperage-wise) of the digital pins on the MCU insufficient for the bus, so they are using that as a gate to one of the 3V3 pins on the bus. Weird but kind of clever.
