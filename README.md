@@ -62,10 +62,28 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 ## Project log
 
 ### 2021-06-04
-Another controller board data sheet: https://www.st.com/resource/en/reference_manual/cd00190271-stm8s-series-and-stm8af-series-8bit-microcontrollers-stmicroelectronics.pdf
+Some significant discoveries.
+
+Having a bench setup I hooked up my logic analyzer to the buses, and it turns out the reason the signals were so weird is because the UARTs on both the LCC and Control Board uses inverted signalling. Interpreting the signals as inverted preliminarily makes the protocol seem less weird (though it's definitely inverted regardless of it's weirdness). Sadly this invalidates some of my previous work.
+
+I was also able to build a bus proxy, so that's step one towards being able to build a replacement LCC. Currently it used a Raspberry Pi Pico, since that was the only board I had at home that supports inverted UARTs. I'm not sure if I'm gonna end up using a Pi Pico (or a RP2040) in the end, but it's not an unreasonable choice. It's cheap and fast. The idea would be to use a Pico as a headless PID, and expose an SPI bus for displaying information in the PID and controlling PID settings. That SPI bus would be accessed by something like an ESP32, which could then display the information on an OLED display, and change settings over the network etc. The only downside I see right now is that the RP2040 has only 2 UARTs, which makes debugging marginally more difficult.
+
+Also, looking at the board for the control board, it's weird that both 3V3 pins are the same. I'm gonna have to look in to that.
+
+Some outstanding tasks:
+
+* Finish up the proxy program so that it exposes data through SPI and logs it to an SD card.
+* Look at the protocol again. Some of my previous work will surely be useful, but not everything.
+* Look in to the possibility of replacing actual thermocouples with potentiometers for debugging/reverse engineering purposes.
+* Experiment with the inputs on the control board to be sure that the protocol is correct.
+* Gather more data from my actual machine
+* Start controlling the control board without the LCC and see that it does what I want.
 
 ### 2021-06-03
 I've purchased a spare control board. The line-voltage and logic-level parts are mostly separate boards, and I've separated them to be able to rig up a bench setup (tested and works). The MCU is a STM8S003F3. Datasheet at https://www.st.com/resource/en/datasheet/stm8s003f3.pdf. It also uses two STPIC6C595 to control logic-level outputs, and it seems the thermocouples (I bought two of those too) are resistance based.
+
+Another controller board data sheet: https://www.st.com/resource/en/reference_manual/cd00190271-stm8s-series-and-stm8af-series-8bit-microcontrollers-stmicroelectronics.pdf
+
 
 ### 2021-03-12
 
