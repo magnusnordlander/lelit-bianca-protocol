@@ -58,6 +58,9 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-06-04
+Another controller board data sheet: https://www.st.com/resource/en/reference_manual/cd00190271-stm8s-series-and-stm8af-series-8bit-microcontrollers-stmicroelectronics.pdf
+
 ### 2021-06-03
 I've purchased a spare control board. The line-voltage and logic-level parts are mostly separate boards, and I've separated them to be able to rig up a bench setup (tested and works). The MCU is a STM8S003F3. Datasheet at https://www.st.com/resource/en/datasheet/stm8s003f3.pdf. It also uses two STPIC6C595 to control logic-level outputs, and it seems the thermocouples (I bought two of those too) are resistance based.
 
