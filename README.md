@@ -61,6 +61,9 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-06-07
+The control board checksum seems to be CheckSum8 Modulo 128, on everything except the first nibble. I'm not *entirely* sure, but the same could be the case for the LCC's last byte.
+
 ### 2021-06-06
 I've been able to make quite a bit of new progress after the setback in finding out that all my captured data was wrong. Some facts:
 
