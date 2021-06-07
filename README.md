@@ -61,6 +61,31 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-06-06
+I've been able to make quite a bit of new progress after the setback in finding out that all my captured data was wrong. Some facts:
+
+* The LCC acts as the bus master. It sends out packets, and the control board responds.
+* LCC packets are 5 bytes long and (probably) always begins with 0x80.
+* Control board packets are 18 bytes long, and (probably) always begins with 0x81.
+* A safe default packet (which the LCC uses when in advanced settings mode) is `80 00 00 00 00`.
+* When the LCC has encountered an error, it sends `80 00 07 00 07`.
+
+I've determined that the temperature probes of the control board measure resistance. 47kOhm is about 27 degrees centigrade, and using a 4.7kOhm rheostat I'm ably to vary the temperature around 80-150 degrees centigrade. I've been able to analyze what varies in the control board data when mucking around with the inputs to the control board and have drawn the following conclusions:
+
+```
+81:00:00:5D:7F:00:79:7F:02:5D:7F:03:2B:00:02:05:7F:67:
+xx lu ?c cc cc ?s ss ss ?c cc cc ?s ss ss xx ss xx zz?
+
+c = coffee boiler temperature
+s = service boiler temperature
+x = unknown
+z = checksum?
+l = livello serb, 0 = open, 4 = closed
+u = microswitch erogazione, 0 = open, 2 = closed
+```
+
+Next step is to make a data logger and log lots of real data.
+
 ### 2021-06-04
 Some significant discoveries.
 
