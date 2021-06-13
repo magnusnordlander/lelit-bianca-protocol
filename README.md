@@ -61,6 +61,31 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-06-13
+```
+81:00:00:5D:7F:00:79:7F:02:5D:7F:03:2B:00:02:05:7F:67:
+81 lu cc cc cc ss ss ss CC CC CC SS SS SS tt tt tt zz
+
+c = coffee boiler temperature, low gain
+C = coffee boiler temperature, high gain
+s = service boiler temperature, low gain
+S = service boiler temperature, high gain
+t = service boiler water level
+z = checksum
+l = water tank level, 0 = not empty, 4 = empty
+u = brew microswitch, 0 = open, 2 = closed
+```
+
+The temperatures and the service boiler water levels are analog signals, with a weird encoding. The code for converting a 3 byte number to an uint16 is as follows:
+
+```c
+if (weirdNum[2] == 0x7F) {
+    return (weirdNum[1] | 0x80) + (weirdNum[0] << 8);
+} else if (weirdNum[2] == 0x00) {
+    return weirdNum[1] + (weirdNum[0] << 8);
+}
+```
+
 ### 2021-06-07
 The control board checksum seems to be CheckSum8 Modulo 128, on everything except the first nibble. I'm not *entirely* sure, but the same could be the case for the LCC's last byte.
 
