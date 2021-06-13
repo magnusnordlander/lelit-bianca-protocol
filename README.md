@@ -101,7 +101,7 @@ c = coffee boiler ssr, bitmask 0x8
 zz = checksum, CheckSum8 Modulo 128
 ```
 
-It is a bit unclear what bytes 3 bitmask 0x7 and byte 4 actually do. I have used a logic analyzer to sniff shift registers on the LCC, and it seems to me that this might be vestigial in the Bianca. Needs further research though.
+It is a bit unclear what bytes 3 bitmask 0x07 and byte 4 actually do. I have used a logic analyzer to sniff shift registers on the LCC, and it seems to me that this might be vestigial in the Bianca. Needs further research though.
 
 ### 2021-06-07
 The control board checksum seems to be CheckSum8 Modulo 128, on everything except the first nibble. I'm not *entirely* sure, but the same could be the case for the LCC's last byte.
