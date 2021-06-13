@@ -88,6 +88,21 @@ if (weirdNum[2] == 0x7F) {
 
 The water level is presumably not *really* meaningful as an analog value. It just requires an ADC to read. It's really just two states.
 
+For the LCC:
+
+```
+80:11:17:00:28
+80 ps ec xx zz
+
+p = pump relay, bitmask 0x1
+s = service boiler ssr, bitmask 0x1
+e = electrovalve relay, bitmask 0x1
+c = coffee boiler ssr, bitmask 0x8
+zz = checksum, CheckSum8 Modulo 128
+```
+
+It is a bit unclear what bytes 3 bitmask 0x7 and byte 4 actually do. I have used a logic analyzer to sniff shift registers on the LCC, and it seems to me that this might be vestigial in the Bianca. Needs further research though.
+
 ### 2021-06-07
 The control board checksum seems to be CheckSum8 Modulo 128, on everything except the first nibble. I'm not *entirely* sure, but the same could be the case for the LCC's last byte.
 
