@@ -78,6 +78,8 @@ bb = front buttons, 0x08 if the minus button is pressed, 0x04 if the plus button
 zz = checksum, CheckSum8 Modulo 128
 ```
 
+Also, in reading [documentation for an OLED display module](https://www.displaymodule.com/products/1-54-128x64-monochrome-graphic-oled-display-module-spi?variant=31919976153186) I'm considering for the replacement unit, I think I've figured out the purpose of the two separate 3V3 lines on the bus. OLED displays prefer to be powered with specific timings. One of the 3V3 lines power the MCU (pin 5), the other the display (pin 6). I'm guessing they are appropriately timed.
+
 ### 2021-06-13
 ```
 81:00:00:5D:7F:00:79:7F:02:5D:7F:03:2B:00:02:05:7F:67
