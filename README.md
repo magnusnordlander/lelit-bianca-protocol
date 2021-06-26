@@ -61,6 +61,23 @@ Furthermore, there is an unpopulated port on the LCC. This could possibly be a d
 
 ## Project log
 
+### 2021-06-26
+I finally figured out what the last byte in the LCC packet was. It's the front buttons.
+
+This is the full description of an LCC packet:
+
+```
+80:11:17:00:28
+80 ps ec bb zz
+
+p = pump relay, bitmask 0x1
+s = service boiler ssr, bitmask 0x1
+e = electrovalve relay, bitmask 0x1
+c = coffee boiler ssr, bitmask 0x8
+bb = front buttons, 0x08 if the minus button is pressed, 0x04 if the plus button is pressed, and 0x0B if both.
+zz = checksum, CheckSum8 Modulo 128
+```
+
 ### 2021-06-13
 ```
 81:00:00:5D:7F:00:79:7F:02:5D:7F:03:2B:00:02:05:7F:67
