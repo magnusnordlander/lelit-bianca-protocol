@@ -1,17 +1,120 @@
 # lelit-bianca-protocol
 Project notes for trying to sniff and reverse engineer the protocols used for LCC information on the Lelit Bianca
 
-# Important project note 2021-06-04
+## Project status (per 2021-06-30)
+The protocol has now been fully reverse engineered (documented below). There is still a matter of calculating more exact ADC-value-to-temperature equations remaining, but I'm now focused more on creating a replacement LCC (see magnusnordlander/smart-lcc).
+
+## Architecture
+The Lelit Bianca has a split controller architecture. One part, the control board, does power management, controls relays, and ADC, and the other part, the LCC, drives the display and buttons, and acts as a PID controller. These two parts communicate via a bus, which is the main focus of this project.
+
+The bus is 6 wires with the following purpose:
+
+* Pinout (red wire is pin 6):
+  * Pin 1: 12V for OLED (Measured 12.6V)
+  * Pin 2: TX (to Control board, 3V3)
+  * Pin 3: RX (from Control board, 5V)
+  * Pin 4: GND
+  * Pin 5: 3V3 for OLED (Measured 3.1V)
+  * Pin 6: 3V3 for MCU(Measured 3.1V)
+
+The TX and RX pins is a UART running at 9600 bps 8N1 with inverted signalling. The LCC acts as the bus master. It sends a message to the control board, and the control board replies.
+
+## LCC to Control Board messages
+
+```
+80:11:17:00:28
+80 ps ec bb zz
+
+p = pump relay, bitmask 0x1
+s = service boiler ssr, bitmask 0x1
+e = electrovalve relay, bitmask 0x1
+c = coffee boiler ssr, bitmask 0x8
+bb = front buttons, 0x08 if the minus button is pressed, 0x04 if the plus button is pressed, and 0x0B if both.
+zz = checksum, CheckSum8 Modulo 128
+```
+
+## Control board to LCC messages
+
+```
+81:00:00:5D:7F:00:79:7F:02:5D:7F:03:2B:00:02:05:7F:67
+81 lu cc cc cc ss ss ss CC CC CC SS SS SS tt tt tt zz
+
+c = coffee boiler temperature, low gain
+C = coffee boiler temperature, high gain
+s = service boiler temperature, low gain
+S = service boiler temperature, high gain
+t = service boiler water level, normal value is around 128, once the level drops it goes to around 600 pretty quick.
+z = checksum, CheckSum8 Modulo 128
+l = water tank level, 0 = not empty, 4 = empty
+u = brew microswitch, 0 = open, 2 = closed
+```
+
+### Weird number conversion
+
+The temperatures and the service boiler water levels are analog signals, with a weird encoding. The high/low gain thing are a speculation on my part, but it seems likely. The code for converting a 3 byte number to an uint16 is as follows:
+
+```c
+if (weirdNum[2] == 0x7F) {
+    return (weirdNum[1] | 0x80) + (weirdNum[0] << 8);
+} else if (weirdNum[2] == 0x00) {
+    return weirdNum[1] + (weirdNum[0] << 8);
+}
+```
+
+The water level is presumably not *really* meaningful as an analog value. It just requires an ADC to read. It's really just two states.
+
+### ADC value to temperatures
+
+ADC values can be somewhat reliably converted to the same temperature as the LCC shows (and back) by third degree polynomials. More data is needed for more exact conversions.
+
+Current best-guess constants are given below for the following form of polynomial:
+
+`y = ax^3 + bx^2 + cx +d`
+
+#### Low gain ADC value to temperatures in degrees Celsius
+
+```
+a = -1.99514E-07
+b = 7.66659E-05
+c = 0.546325171
+d = -17.22637553
+```
+
+#### High gain ADC value to temperatures in degrees Celsius
+
+```
+a = 2.80075E-07
+b = -0.000371374
+c = 0.272450858
+d = -4.737333399
+```
+
+#### Degrees Celsius to low gain ADC value
+
+```
+a = 1.94759E-06
+b = -0.000294428
+c = 1.812604664
+d = 31.49048711
+```
+
+#### Degrees Celsius to high gain ADC value
+
+```
+a = -0.000468472
+b = 0.097074921
+c = 1.6935213
+d = 27.8765092
+```
+
+# Old information
+
+## Important project note 2021-06-04
 So, I just discovered that the Bianca uses inverted UART signalling. Most protocol weirdness seems to be related to that. Quite a bit of information created before (including protocol dumps) 2021-06-04 is somewhat wrong because of this. I will be purging incorrect information at some point, but at the moment, YMMV
 
 ## Goals
 * Stage 1: Expose interesting information as an IoT appliance
 * ~~Stage 2: Allow for IoT control of set points, sleep mode etc~~ (Not possible without replacing LCC)
-
-## Open questions
-
-* What's with the weird encodings?
-* What's in the other bits on the CILO protocol?
 
 ## Answered questions
 
@@ -19,6 +122,11 @@ So, I just discovered that the Bianca uses inverted UART signalling. Most protoc
   * Not exactly. It's an on-board programming port.
 * Is the LCC communicating with the Control board using a serial protocol?
   * Yes, and it contains interesting information.
+* What's with the weird encodings?
+  * I don't know why they do it this way, but that's fine.
+* What's in the other bits on the CILO protocol?
+  * Button presses
+
 
 ## Random thoughts on the protocol
 
