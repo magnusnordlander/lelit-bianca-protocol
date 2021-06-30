@@ -2,7 +2,7 @@
 Project notes for trying to sniff and reverse engineer the protocols used for LCC information on the Lelit Bianca
 
 ## Project status (per 2021-06-30)
-The protocol has now been fully reverse engineered (documented below). There is still a matter of calculating more exact ADC-value-to-temperature equations remaining, but I'm now focused more on creating a replacement LCC (see magnusnordlander/smart-lcc).
+The protocol has now been fully reverse engineered (documented below). There is still a matter of calculating more exact ADC-value-to-temperature equations remaining, but I'm now focused more on creating a replacement LCC (see [magnusnordlander/smart-lcc](https://github.com/magnusnordlander/smart-lcc)).
 
 ## Architecture
 The Lelit Bianca has a split controller architecture. One part, the control board, does power management, controls relays, and ADC, and the other part, the LCC, drives the display and buttons, and acts as a PID controller. These two parts communicate via a bus, which is the main focus of this project.
