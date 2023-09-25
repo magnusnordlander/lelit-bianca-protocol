@@ -47,8 +47,8 @@ typedef enum : uint8_t {
     LCC_SHIFT_REGISTER_1_CM9_BREW_BOILER_RELAY = 1 << 3,
     LCC_SHIFT_REGISTER_1_FA7_SOLENOID = 1 << 4,
     LCC_SHIFT_REGISTER_1_FA8_SOLENOID_V3 = 1 << 5, // FA8 is unconnected on Bianca V2
-    LCC_SHIFT_REGISTER_1_CN10_DISABLE_OLED_12V = 1 << 6,
-    LCC_SHIFT_REGISTER_1_CN10_DISABLE_OLED_3V3 = 1 << 7,
+    LCC_SHIFT_REGISTER_1_CN10_DISABLE_OLED_12V = 1 << 6, // Maybe. They are connected to some kind of transistor that would presumably cut power to 12V on CN10 if used, but this has not been tested yet
+    LCC_SHIFT_REGISTER_1_CN10_DISABLE_OLED_3V3 = 1 << 7, // Maybe. They are connected to some kind of transistor that would presumably cut power to 3V3 OLED on CN10 if used, but this has not been tested yet
 } LccShiftRegister1Flags;
 
 typedef enum : uint8_t {
@@ -58,7 +58,7 @@ typedef enum : uint8_t {
 } LccShiftRegister2Flags;
 ```
 
-From what I can tell, drains 1-3 and drains 6-7 on SR2 are unconnected.
+From what I can tell, drains 1-3 and drains 6-7 on SR2 are unconnected. When the control board starts up, it starts up in a safe state, i.e. all relays off and all solenoids closed. However, **it does not reset to a safe state if it stops receiving messages from the LCC**. If the LCC is about to stop sending messages, it is therefore *highly* advisable to first send LCC packets to set the control board to a safe state.
 
 ## Control board to LCC messages
 
