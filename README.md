@@ -1,10 +1,10 @@
 # lelit-bianca-protocol
 Project notes for trying to sniff and reverse engineer the protocols used for LCC information on the Lelit Bianca V2
 
-## Project status (per 2021-06-30)
-The protocol has now been fully reverse engineered (documented below). There is still a matter of calculating more exact ADC-value-to-temperature equations remaining, but I'm now focused more on creating a replacement LCC (see [magnusnordlander/smart-lcc](https://github.com/magnusnordlander/smart-lcc)).
+## Project status (per 2023-09-25)
+The protocol has now been more or less reverse engineered (documented below). There is still a matter of calculating more exact ADC-value-to-temperature equations remaining, but I'm now focused more on creating a replacement LCC (see [magnusnordlander/smart-lcc](https://github.com/magnusnordlander/smart-lcc)).
 
-It doesn't cover the presumably updated protocol for the Bianca V3, and since I don't have access to a Bianca V3 (for reverse engineering or otherwise) there's currently no plan for when that could be reverse engineered.
+It doesn't exactly cover the protocol for the Bianca V3. I don't have access to a Bianca V3 (for reverse engineering or otherwise), so if someone else does, a protocol dump from a V3 could be very useful. From other sources, I have been able to gather that in the V3, the large solenoid is now connected to FA8 on the control board, instead of being connected in parallell with the pump. Furthermore, the power light has been replaced with an LED, controlled by the LCC. The LED is connected to CN6, and presumably one of the signals from shift register 1 controls it.
 
 ## Architecture
 The Lelit Bianca has a split controller architecture. One part, the control board, does power management, controls relays, and ADC, and the other part, the LCC, drives the display and buttons, and acts as a PID controller. These two parts communicate via a bus, which is the main focus of this project.
