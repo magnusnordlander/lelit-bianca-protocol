@@ -25,15 +25,40 @@ The TX and RX pins is a UART running at 9600 bps 8N1 with inverted signalling. T
 
 ```
 80:11:17:00:28
-80 ps ec bb zz
+80 ii jj bb zz
 
-p = pump relay, bitmask 0x1
-s = service boiler ssr, bitmask 0x1
-e = electrovalve relay, bitmask 0x1
-c = coffee boiler ssr, bitmask 0x8
+ii = shift register 2
+jj = shift register 1
 bb = front buttons, 0x08 if the minus button is pressed, 0x04 if the plus button is pressed, and 0x0B if both.
 zz = checksum, CheckSum8 Modulo 128
 ```
+
+### The shift registers
+
+In the control board there are two shift registers, which are unlabled on the PCB, but which I call Shift Register 1 and Shift Register 2. They are both STPIC6C595's, and SER_OUT of SR1 is connected to SER_IN of SR2. SR1 gets its data from the control board MCU (a STM8S003F3P6).
+
+Here's bitmask values for what the different bits in the shift registers do:
+
+```
+typedef enum : uint8_t {
+    LCC_SHIFT_REGISTER_1_CN6_1 = 1 << 0,
+    LCC_SHIFT_REGISTER_1_CN6_3 = 1 << 1,
+    LCC_SHIFT_REGISTER_1_CN6_5 = 1 << 2,
+    LCC_SHIFT_REGISTER_1_CM9_BREW_BOILER_RELAY = 1 << 3,
+    LCC_SHIFT_REGISTER_1_FA7_SOLENOID = 1 << 4,
+    LCC_SHIFT_REGISTER_1_FA8_SOLENOID_V3 = 1 << 5, // FA8 is unconnected on Bianca V2
+    LCC_SHIFT_REGISTER_1_CN10_DISABLE_OLED_12V = 1 << 6,
+    LCC_SHIFT_REGISTER_1_CN10_DISABLE_OLED_3V3 = 1 << 7,
+} LccShiftRegister1Flags;
+
+typedef enum : uint8_t {
+    LCC_SHIFT_REGISTER_2_CN5_SERVICE_BOILER_RELAY = 1 << 0,
+    LCC_SHIFT_REGISTER_2_FA10_PUMP_RELAY = 1 << 4, // Also connected to the larger solenoid on V2
+    LCC_SHIFT_REGISTER_2_FA9 = 1 << 5,
+} LccShiftRegister2Flags;
+```
+
+From what I can tell, drains 1-3 and drains 6-7 on SR2 are unconnected.
 
 ## Control board to LCC messages
 
